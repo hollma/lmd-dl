@@ -1,2 +1,9 @@
 # lmd-dl
-a free and open source download manager for subscribers of Le Monde Diplomatique
+A free and open source download manager for subscribers of the German edition of Le Monde Diplomatique.
+
+## Get lmd-dl
+
+## Usage
+
+## Technical background
+
