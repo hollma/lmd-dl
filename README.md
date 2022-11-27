@@ -1,6 +1,13 @@
 # lmd-dl
 A free and open source download manager for subscribers of the German edition of Le Monde Diplomatique.
 
+## Why lmd-dl? 
+
+I enjoy reading (or listening) to the German edition of Le Monde Diplomatique.
+However, using the website [https://monde-diplomatique.de/digitale-formate](https://monde-diplomatique.de/digitale-formate)
+in order to download the latest issues in my preferred file formats is not enjoyable at all. 
+The software `lmd-dl` tries to make LMD subscriptions more user friendly. 
+
 ## Get lmd-dl
 
 You can clone the repository from Github:
@@ -50,3 +57,28 @@ Le Monde Diplomatique to the cache directory (see `src/config.ini`).
 
 ## Technical background
 
+Downloading the latest LMD issue works like this.
+
+You visit the website [https://monde-diplomatique.de/digitale-formate](https://monde-diplomatique.de/digitale-formate).
+
+![Screenshot from the website: overview over all file formats.](img/screenshot_overview.png)
+
+Then you choose your preferred file format, for example, PDF.
+
+![Screenshot from the website: latest issues with drop down menu](img/screenshot_filetype.png)
+
+If you click on "Auswahl als Liste" you will see a list of the latest issues.
+
+![Screenshot from the website: latest issues in a list](img/screenshot_filetype_list.png)
+   
+Downloading an issue works like this. You send a HTTP POST request to the server. The request contains POST variables such as:
+- username
+- password
+- filename of the issue you are about to download
+- `Laden=+Laden+`
+- and `year=`.
+
+The server's response contains the requested file. 
+Now you choose a directory for saving the file (or your browser does it for you).
+
+The goal of `lmd-dl` to automate this process. 
