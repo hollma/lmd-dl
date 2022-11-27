@@ -46,7 +46,7 @@ def initialize_config_variables():
     args = parser.parse_args()
     arguments_dict = vars(args)
 
-# if any filetype CLI argument is passed, they overwrite the config.ini entries (missing filetypes default to False)
+    # if any filetype CLI argument is passed, they overwrite the config.ini entries (missing filetypes default to False)
     filetype_arg_values = [v for k, v in arguments_dict.items() if k in FILETYPES.keys()]
     if any(filetype_arg_values):
         for k, v in arguments_dict.items():
