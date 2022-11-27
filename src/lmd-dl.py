@@ -1,7 +1,8 @@
 from configparser import ConfigParser
 from argparse import ArgumentParser
 import requests
-
+from bs4 import BeautifulSoup
+import pprint
 
 FILETYPES = {"pdf"    : "Download LMD as pdf",
              "pdfz"   : "Download LMD as pdf (zipped)",
@@ -12,7 +13,8 @@ FILETYPES = {"pdf"    : "Download LMD as pdf",
              "html"   : "Download LMD as html (zipped)",
              "mp3"    : "Download LMD as mp3 (zipped)"
              }
-DEBUG = True
+
+DEBUG = False
 def read_config():
     config = ConfigParser()
     config.read("config.ini")
@@ -34,10 +36,14 @@ def initialize_config_variables():
     group = parser.add_argument_group("Supported filetypes")
     for filetype, helpmsg in FILETYPES.items():
         group.add_argument("--{}".format(filetype), action="store_true", help=helpmsg)
+
+    group = parser.add_argument_group("Download options")
+    group.add_argument("-c", "--count", type=int, default=config["DOWNLOAD_OPTIONS"]["issue_count"], help="Download the <count> most recent issues of Le Monde Diplomatique.")
+
     args = parser.parse_args()
     arguments_dict = vars(args)
 
-    # if any filetype CLI argument is passed, they overwrite the config.ini entries (missing filetypes default to False)
+# if any filetype CLI argument is passed, they overwrite the config.ini entries (missing filetypes default to False)
     filetype_arg_values = [v for k, v in arguments_dict.items() if k in FILETYPES.keys()]
     if any(filetype_arg_values):
         for k, v in arguments_dict.items():
@@ -51,10 +57,21 @@ def initialize_config_variables():
     config["CREDENTIALS"]["username"] = arguments_dict["username"]
     config["CREDENTIALS"]["password"] = arguments_dict["password"]
 
+    config["DOWNLOAD_OPTIONS"]["issue_count"] = str(arguments_dict["count"])
     return config
 
 def get_url(filetype):
     return "https://dl.monde-diplomatique.de/{}".format(filetype)
+
+def get_filenames(filetype):
+    url = get_url(filetype) + "/" + "list"
+    response = requests.get(url)
+    soup = BeautifulSoup(response.text, features="lxml")
+
+    filenames = [li.find("a").get("href").split("/")[-1] for li in soup.find_all("li")]
+
+    return filenames
+
 
 def download_file(filetype, filename, username, password):
     download_url = get_url(filetype)
@@ -79,16 +96,25 @@ def main():
                 print(key, "=", config[sec][key])
             print()
 
-    # TODO: build the correct URLs for all requested filetypes and dates
-    # this is just a dummy implementation
-    filetype = "pdf"
-    filename = "lmd_2022_11_10.113503.pdf"
+    filenames = {}
+    for filetype in FILETYPES.keys():
+        filenames[filetype] = get_filenames(filetype)
+
+    if DEBUG:
+        pp = pprint.PrettyPrinter(indent=4)
+        pp.pprint(filenames)
+
+
     username = config["CREDENTIALS"]["username"]
     password = config["CREDENTIALS"]["password"]
+    issue_count = int(config["DOWNLOAD_OPTIONS"]["issue_count"])
 
-    myfile = download_file(filetype, filename, username, password)
-    with open(config["PATHS"]["cache_dir"] + "/" + filename , 'wb') as f:
-        f.write(myfile)
+    for filetype in FILETYPES.keys():
+        if config["FORMATS"].getboolean(filetype):
+            for current_filename in filenames[filetype][0:issue_count]:
+                myfile = download_file(filetype, current_filename, username, password)
+                with open(config["PATHS"]["cache_dir"] + "/" + current_filename , 'wb') as f:
+                    f.write(myfile)
 
 
 if __name__ == "__main__":
