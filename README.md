@@ -13,7 +13,7 @@ git clone https://github.com/hollma/lmd-dl.git
 Firstly, edit `src/config.ini`.
 Initially, the config looks like this:
 
-```txt:src/config.ini
+```python:src/config.ini
 
 ```
 
