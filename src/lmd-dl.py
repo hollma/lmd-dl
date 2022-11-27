@@ -15,10 +15,13 @@ FILETYPES = {"pdf"    : "Download LMD as pdf",
              }
 
 DEBUG = False
+
+
 def read_config():
     config = ConfigParser()
     config.read("config.ini")
     return config
+
 
 def initialize_config_variables():
     config = read_config()
@@ -60,8 +63,10 @@ def initialize_config_variables():
     config["DOWNLOAD_OPTIONS"]["issue_count"] = str(arguments_dict["count"])
     return config
 
+
 def get_url(filetype):
     return "https://dl.monde-diplomatique.de/{}".format(filetype)
+
 
 def get_filenames(filetype):
     url = get_url(filetype) + "/" + "list"
@@ -86,6 +91,7 @@ def download_file(filetype, filename, username, password):
     # We assume that response.content contains the requested file.
     return response.content
 
+
 def main():
     config = initialize_config_variables()
 
@@ -103,7 +109,6 @@ def main():
     if DEBUG:
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(filenames)
-
 
     username = config["CREDENTIALS"]["username"]
     password = config["CREDENTIALS"]["password"]
