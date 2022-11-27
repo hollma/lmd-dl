@@ -47,9 +47,38 @@ Replace `username` and `password` with your credentials.
 Moreover, enter valid directory paths in the `PATHS` section.
 Modify the remaining options according to your own preferences.
 
-Run `python3 src/lmd-dl.py -h` in order to show the help option.
+Run `python3 lmd-dl.py -h` in order to show the help option.
 
-If everything is set up, run `python3 src/lmd-dl.py` in order to download the most recent issues of 
+```
+usage: lmd-dl [-h] [--username USERNAME] [--password PASSWORD] [--pdf] [--pdfz] [--epub] [--epubt] [--ascii] [--asciiz] [--html] [--mp3] [-c COUNT]
+
+A free and open source download manager for subscribers of the German edition of Le Monde Diplomatique.
+
+options:
+  -h, --help            show this help message and exit
+
+Authentication information:
+  --username USERNAME   Your username
+  --password PASSWORD   Your password
+
+Supported filetypes:
+  --pdf                 Download LMD as pdf
+  --pdfz                Download LMD as pdf (zipped)
+  --epub                Download LMD as epub
+  --epubt               Download LMD as epub (text-only)
+  --ascii               Download LMD as txt
+  --asciiz              Download LMD as txt (zipped)
+  --html                Download LMD as html (zipped)
+  --mp3                 Download LMD as mp3 (zipped)
+
+Download options:
+  -c COUNT, --count COUNT
+                        Download the <count> most recent issues of Le Monde Diplomatique.
+
+Get the most recent version at https://github.com/hollma/lmd-dl.
+```
+
+If everything is set up, run `python3 lmd-dl.py` in order to download the most recent issues of 
 Le Monde Diplomatique to the cache directory (see `src/config.ini`). 
 
 ### TODO
