@@ -81,4 +81,12 @@ Downloading an issue works like this. You send a HTTP POST request to the server
 The server's response contains the requested file. 
 Now you choose a directory for saving the file (or your browser does it for you).
 
+This can also be done using `curl`:
+
+```
+NAME=myusername
+PASS=mypassword
+curl 'https://dl.monde-diplomatique.de/pdf' -X POST --data-raw 'name=$NAME&password=$PASS&id=lmd_2022_11_10.113503.pdf&Laden=+Laden+&year=' -o /tmp/lmd_2022_11_10.113503.pdf
+```
+
 The goal of `lmd-dl` to automate this process. 
