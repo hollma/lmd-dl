@@ -13,8 +13,27 @@ git clone https://github.com/hollma/lmd-dl.git
 Firstly, edit `src/config.ini`.
 Initially, the config looks like this:
 
-```python:src/config.ini
+```
+[CREDENTIALS]
+username = change_me
+password = change_me
 
+[FORMATS]
+pdf    = yes
+pdfz   = yes
+epub   = yes
+epubt  = yes
+ascii  = yes
+asciiz = yes
+html   = yes
+mp3    = yes
+
+[PATHS]
+cache_dir  = /path/to/the/cache/directory
+output_dir = /path/to/the/output/directory
+
+[DOWNLOAD_OPTIONS]
+issue_count = 1
 ```
 
 Replace `username` and `password` with your credentials.
