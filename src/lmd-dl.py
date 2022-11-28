@@ -4,6 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 import pprint
 import os
+from zipfile import ZipFile
+
 
 FILETYPES = {"pdf"    : "Download LMD as pdf",
              "pdfz"   : "Download LMD as pdf (zipped)",
@@ -14,6 +16,8 @@ FILETYPES = {"pdf"    : "Download LMD as pdf",
              "html"   : "Download LMD as html (zipped)",
              "mp3"    : "Download LMD as mp3 (zipped)"
              }
+
+ZIPPED = ["html", "mp3"]
 
 DEBUG = False
 
@@ -117,12 +121,19 @@ def main():
 
     for filetype in FILETYPES.keys():
         if config["FORMATS"].getboolean(filetype):
-            for current_filename in filenames[filetype][0:issue_count]:
+            from_old_to_new_filenames = filenames[filetype][0:issue_count]
+            from_old_to_new_filenames.reverse()
+
+            for current_filename in from_old_to_new_filenames:
                 myfile = download_file(filetype, current_filename, username, password)
                 subdir = os.path.join(config["PATHS"]["cache_dir"], filetype)
                 os.makedirs(subdir, exist_ok=True)
                 with open(os.path.join(subdir, current_filename), 'wb') as f:
                     f.write(myfile)
+
+                if filetype in ZIPPED:
+                    with ZipFile(os.path.join(subdir, current_filename), 'r') as zObject:
+                        zObject.extractall(subdir)
 
 
 if __name__ == "__main__":
