@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 import requests
 from bs4 import BeautifulSoup
 import pprint
+import os
 
 FILETYPES = {"pdf"    : "Download LMD as pdf",
              "pdfz"   : "Download LMD as pdf (zipped)",
@@ -118,7 +119,9 @@ def main():
         if config["FORMATS"].getboolean(filetype):
             for current_filename in filenames[filetype][0:issue_count]:
                 myfile = download_file(filetype, current_filename, username, password)
-                with open(config["PATHS"]["cache_dir"] + "/" + current_filename , 'wb') as f:
+                subdir = os.path.join(config["PATHS"]["cache_dir"], filetype)
+                os.makedirs(subdir, exist_ok=True)
+                with open(os.path.join(subdir, current_filename), 'wb') as f:
                     f.write(myfile)
 
 
