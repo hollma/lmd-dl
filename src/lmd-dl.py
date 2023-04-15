@@ -125,6 +125,7 @@ def main():
             from_old_to_new_filenames.reverse()
 
             for current_filename in from_old_to_new_filenames:
+                print("Downloading", current_filename, "...")
                 myfile = download_file(filetype, current_filename, username, password)
                 subdir = os.path.join(config["PATHS"]["cache_dir"], filetype)
                 os.makedirs(subdir, exist_ok=True)
