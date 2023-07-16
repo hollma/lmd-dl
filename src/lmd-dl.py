@@ -134,7 +134,9 @@ def main():
 
                 if filetype in ZIPPED:
                     with ZipFile(os.path.join(subdir, current_filename), 'r') as zObject:
-                        zObject.extractall(subdir)
+                        dest = os.path.join(subdir, current_filename[0:14]) # lmd_cache_dir/mp3/lmd_yyyy_mm_dd
+                        os.makedirs(dest, exist_ok=True)
+                        zObject.extractall(dest)
 
 
 if __name__ == "__main__":
