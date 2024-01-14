@@ -100,14 +100,9 @@ If you click on "Auswahl als Liste" you will see a list of the latest issues.
 
 ![Screenshot from the website: latest issues in a list](img/screenshot_filetype_list.png)
    
-Downloading an issue works like this. You send a HTTP POST request to the server. The request contains POST variables such as:
-- username
-- password
-- filename of the issue you are about to download
-- `Laden=+Laden+`
-- and `year=`.
+Downloading an issue works like this. You send a HTTP GET request to the server.
 
-The server's response contains the requested file. 
+The server's response contains the HTTP status code 200 and the requested file if you have been authenticated successfully. Otherwise the server responds with the status code 403 (Not Authorized).
 Now you choose a directory for saving the file (or your browser does it for you).
 
 This can also be done using `curl`:
@@ -115,7 +110,7 @@ This can also be done using `curl`:
 ```
 NAME=myusername
 PASS=mypassword
-curl 'https://dl.monde-diplomatique.de/pdf' -X POST --data-raw 'name=$NAME&password=$PASS&id=lmd_2022_11_10.113503.pdf&Laden=+Laden+&year=' -o /tmp/lmd_2022_11_10.113503.pdf
+curl -u $NAME:$PASS 'https://dl.monde-diplomatique.de/ascii/id/lmd_2023_10_12.120843.txt'
 ```
 
 The goal of `lmd-dl` to automate this process. 
