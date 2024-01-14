@@ -1,6 +1,7 @@
 from configparser import ConfigParser
 from argparse import ArgumentParser
 import requests
+from requests.auth import HTTPBasicAuth
 from bs4 import BeautifulSoup
 import pprint
 import os
@@ -68,13 +69,8 @@ def initialize_config_variables():
     config["DOWNLOAD_OPTIONS"]["issue_count"] = str(arguments_dict["count"])
     return config
 
-
-def get_url(filetype):
-    return "https://dl.monde-diplomatique.de/{}".format(filetype)
-
-
 def get_filenames(filetype):
-    url = get_url(filetype) + "/" + "list"
+    url = "https://dl.monde-diplomatique.de/{}/list".format(filetype)
     response = requests.get(url)
     soup = BeautifulSoup(response.text, features="lxml")
 
@@ -84,14 +80,10 @@ def get_filenames(filetype):
 
 
 def download_file(filetype, filename, username, password):
-    download_url = get_url(filetype)
-    data = {"name" : username,
-            "password" : password,
-            "id" : filename,
-            "Laden" : "+Laden+",
-            "year" : ""}
+    download_url = "https://dl.monde-diplomatique.de/{}/id/{}".format(filetype, filename)
 
-    response = requests.post(download_url, data = data)
+    auth = HTTPBasicAuth(username, password)
+    response = requests.get(download_url, auth=auth)
     # Keep in mind that there is no check whether the right file was actually downloaded.
     # We assume that response.content contains the requested file.
     return response.content
